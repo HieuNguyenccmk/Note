@@ -17,8 +17,8 @@ classdef model
             %% Preferences.
             par.beta = 0.94;
             par.sigma = 2.00;
-            assert(par.beta > 0 && par.beta < 1.00,'Discount factor should be between 0 and 1.\n')
-            assert(par.sigma > 0,'CRRA should be at least 0.\n')
+            assert(par.beta > 0 && par.beta < 1.00)
+            assert(par.sigma > 0)
 
             %% Technology.
             par.alpha = 0.33;
@@ -35,7 +35,7 @@ classdef model
             %% Prices.
             par.r = 0.06;
             par.omega = 0.2;
-            par.tau = 0.2; % <<== New: tax rate of 20%
+            par.tau = 0.2; % Income tax rate: 20%
 
             %% Simulation parameters.
             par.seed = 2025;
@@ -64,15 +64,15 @@ classdef model
         function [y,pi] = tauchen(mu,rho,sigma,N,m)
             ar_mean = mu/(1-rho);
             ar_sd = sigma/((1-rho^2)^(1/2));
-            y1 = ar_mean-(m*ar_sd);
-            yn = ar_mean+(m*ar_sd);
-            y = linspace(y1,yn,N);
-            d = y(2)-y(1);
-            ymatk = repmat(y,N,1);
-            ymatj = mu+rho*ymatk';
-            pi = normcdf(ymatk,ymatj-(d/2),sigma) - normcdf(ymatk,ymatj+(d/2),sigma);
-            pi(:,1) = normcdf(y(1),mu+rho*y-(d/2),sigma);
-            pi(:,N) = 1 - normcdf(y(N),mu+rho*y+(d/2),sigma);
+            y1 = ar_mean - (m * ar_sd);
+            yn = ar_mean + (m * ar_sd);
+            y = linspace(y1, yn, N);
+            d = y(2) - y(1);
+            ymatk = repmat(y, N, 1);
+            ymatj = mu + rho * ymatk';
+            pi = normcdf(ymatk, ymatj - (d/2), sigma) - normcdf(ymatk, ymatj + (d/2), sigma);
+            pi(:,1) = normcdf(y(1), mu + rho * y - (d/2), sigma);
+            pi(:,N) = 1 - normcdf(y(N), mu + rho * y + (d/2), sigma);
         end
 
         function u = utility(c,par)
